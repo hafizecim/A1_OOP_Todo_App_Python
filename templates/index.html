@@ -6,10 +6,18 @@
 </head>
 <body>
     <h1>Todo List</h1>
+    <div>Add a new todo item: 
+        <form action = "/add" method="POST">
+            <input type="text"  name="todoitem" placeholder="Enter new todo item">
+            <input type="submit">
+        </form>
+    </div>
+    <div>
     <ul>
         <li style="font-size: 30pt"><input type  = "checkbox">Some text</li>
         <li style="font-size: 30pt"><input type  = "checkbox">Some text</li>
         <li style="font-size: 30pt"><input type  = "checkbox">Some text</li>
     </ul>
+    </div>
 </body>
 </html>
