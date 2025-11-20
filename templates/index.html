@@ -1,23 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>Todo App</title>
-</head>
-<body>
+  </head>
+  <body>
     <h1>Todo List</h1>
-    <div>Add a new todo item: 
-        <form action = "/add" method="POST">
-            <input type="text"  name="todoitem" placeholder="Enter new todo item">
-            <input type="submit">
-        </form>
+    <div>
+      Add a new todo item:
+      <form action="/add" method="POST">
+        <input type="text" name="todoitem" placeholder="Enter new todo item" />
+        <input type="submit" />
+      </form>
     </div>
     <div>
-    <ul>
-        <li style="font-size: 30pt"><input type  = "checkbox">Some text</li>
-        <li style="font-size: 30pt"><input type  = "checkbox">Some text</li>
-        <li style="font-size: 30pt"><input type  = "checkbox">Some text</li>
-    </ul>
+      <ul>
+        {% for todo in todos %}
+        <li style="font-size: 30pt">
+          <input type="checkbox" />{{ todo.text }}
+        </li>
+        {% endfor %}
+      </ul>
     </div>
-</body>
+  </body>
 </html>
