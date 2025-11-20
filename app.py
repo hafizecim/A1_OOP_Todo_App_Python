@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request,redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 
 
@@ -19,10 +19,13 @@ def index():
 
 @app.route('/add', methods=['POST'])
 def add():
-    
-
+    todo = Todo(text=request.form['todoitem'], complete=False)
+    db.session.add(todo)
+    db.session.commit()
     return '<h1>{}</h1>'.format(request.form['todoitem'])
     
 if __name__ == '__main__':
+    with app.app_context():  # Flask uygulama bağlamını açıyoruz
+        db.create_all()      # Bu satır veritabanını ve tabloyu oluşturur
     
     app.run(debug=True)
