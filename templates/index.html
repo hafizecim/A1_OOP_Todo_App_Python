@@ -145,14 +145,13 @@
                       </td>
                       <td class="text-end text-nowrap align-middle">
                         {% if task.status == 'pending' %}
-                        <a
-                          href="{{ url_for('update_status', id=task.id, new_status='in_progress') }}"
-                          class="btn btn-sm btn-success p-1"
-                          title="Başlat"
-                        >
-                          <i class="bi bi-play-fill"></i>
-                        </a>
-                        {% endif %}
+  <a href="{{ url_for('start_task', id=task.id) }}" class="btn btn-sm btn-primary p-1"
+     {% if active_task %} disabled {% endif %}>
+    <i class="bi bi-play-fill"></i> Başlat
+  </a>
+{% endif %}
+
+
                         <a
                           href="{{ url_for('edit', id=task.id) }}"
                           class="btn btn-sm btn-warning p-1"
@@ -191,86 +190,171 @@
 
         <!-- ORTA PANEL ve SAĞ PANEL BURADA -->
         <!-- ORTA PANEL: Durum ve Öncelik Kartları -->
-        <div class="col-lg-6">
-          <div class="row g-3">
+        <!-- ORTA PANEL: Durum ve Öncelik Kartları + Detay Kartı -->
+<div class="col-lg-6">
+    <div class="row g-3">
+        <!-- Üstte iki kart yan yana -->
+        <div class="col-6">
             <!-- Görev Durumu Kartı -->
-            <div class="col-6">
-              <div class="card shadow-sm">
+            <div class="card shadow-sm">
                 <div class="card-header bg-white">
-                  <strong
-                    ><i class="bi bi-list-check me-2"></i> Görev Durumu</strong
-                  >
+                    <strong><i class="bi bi-list-check me-2"></i> Görev Durumu</strong>
                 </div>
                 <div class="card-body">
-                  <div class="d-flex justify-content-between mb-2">
-                    <span>Bekleyen</span>
-                    <span class="badge bg-warning text-dark">
-                      {{
-                      tasks|selectattr('status','equalto','pending')|list|length
-                      }}
-                    </span>
-                  </div>
-                  <div class="d-flex justify-content-between mb-2">
-                    <span>İşlemde</span>
-                    <span class="badge bg-primary">
-                      {{
-                      tasks|selectattr('status','equalto','in_progress')|list|length
-                      }}
-                    </span>
-                  </div>
-                  <div class="d-flex justify-content-between">
-                    <span>Tamamlanmış</span>
-                    <span class="badge bg-success">
-                      {{
-                      tasks|selectattr('status','equalto','completed')|list|length
-                      }}
-                    </span>
-                  </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Bekleyen</span>
+                        <span class="badge bg-warning text-dark">
+                            {{ tasks|selectattr('status','equalto','pending')|list|length }}
+                        </span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>İşlemde</span>
+                        <span class="badge bg-primary">
+                            {{ tasks|selectattr('status','equalto','in_progress')|list|length }}
+                        </span>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span>Tamamlanmış</span>
+                        <span class="badge bg-success">
+                            {{ tasks|selectattr('status','equalto','completed')|list|length }}
+                        </span>
+                    </div>
                 </div>
-              </div>
             </div>
-
-            <!-- Öncelik Kartı -->
-            <div class="col-6">
-              <div class="card shadow-sm">
-                <div class="card-header bg-white">
-                  <strong
-                    ><i class="bi bi-exclamation-circle me-2"></i>
-                    Öncelik</strong
-                  >
-                </div>
-                <div class="card-body">
-                  <div class="d-flex justify-content-between mb-2">
-                    <span>Acil</span>
-                    <span class="badge bg-danger">
-                      {{
-                      tasks|selectattr('priority','equalto','high')|list|length
-                      }}
-                    </span>
-                  </div>
-                  <div class="d-flex justify-content-between mb-2">
-                    <span>Orta</span>
-                    <span class="badge bg-primary">
-                      {{
-                      tasks|selectattr('priority','equalto','medium')|list|length
-                      }}
-                    </span>
-                  </div>
-                  <div class="d-flex justify-content-between">
-                    <span>Önemsiz</span>
-                    <span class="badge bg-secondary">
-                      {{
-                      tasks|selectattr('priority','equalto','low')|list|length
-                      }}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
 
-        <div class="col-lg-3"></div>
+        <div class="col-6">
+            <!-- Öncelik Kartı -->
+            <div class="card shadow-sm">
+                <div class="card-header bg-white">
+                    <strong><i class="bi bi-exclamation-circle me-2"></i> Öncelik</strong>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Acil</span>
+                        <span class="badge bg-danger">
+                            {{ tasks|selectattr('priority','equalto','high')|list|length }}
+                        </span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Orta</span>
+                        <span class="badge bg-primary">
+                            {{ tasks|selectattr('priority','equalto','medium')|list|length }}
+                        </span>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span>Önemsiz</span>
+                        <span class="badge bg-secondary">
+                            {{ tasks|selectattr('priority','equalto','low')|list|length }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    
+        <!-- Altında tek kart: Seçili Görev Detay Kartı -->
+<div class="col-12">
+    {% if active_task %}
+    <div class="card shadow-sm">
+        <div class="card-header bg-white">
+            <strong><i class="bi bi-info-circle me-2"></i> İşlemdeki Görevin Detayı</strong>
+        </div>
+        <div class="card-body">
+            <div class="row g-2">
+                <!-- Başlık -->
+                <div class="col-md-3 fw-bold">Başlık:</div>
+                <div class="col-md-3">{{ active_task.title }}</div>
+
+                <!-- Açıklama -->
+                <div class="col-md-3 fw-bold">Açıklama:</div>
+                <div class="col-md-3">{{ active_task.description or "Yok" }}</div>
+
+                <!-- Başlama Tarihi -->
+                <div class="col-md-3 fw-bold">Başlama Tarihi:</div>
+                <div class="col-md-3">
+                    {{ active_task.started_at.strftime('%Y-%m-%d') if active_task.started_at else "Belirtilmemiş" }}
+                </div>
+
+                <!-- Tahmini Bitiş -->
+                <div class="col-md-3 fw-bold">Tahmini Bitiş:</div>
+                <div class="col-md-3">
+                    {{ active_task.due_date.strftime('%Y-%m-%d') if active_task.due_date else "Belirtilmemiş" }}
+                </div>
+
+                <!-- Öncelik ve Zaman Durumu yan yana -->
+<div class="row g-2 align-items-center">
+    <!-- Öncelik -->
+    <div class="col-md-6 d-flex align-items-center">
+        <div class="fw-bold me-2">Öncelik:</div>
+        {% if active_task.priority == 'high' %}
+            <span class="badge bg-danger">Acil</span>
+        {% elif active_task.priority == 'medium' %}
+            <span class="badge bg-primary">Orta</span>
+        {% elif active_task.priority == 'low' %}
+            <span class="badge bg-secondary">Önemsiz</span>
+        {% endif %}
+    </div>
+
+    <!-- Zaman Durumu -->
+    <div class="col-md-6 d-flex align-items-center">
+        <div class="fw-bold me-2">Zaman Durumu:</div>
+        {% if active_task.due_date %}
+            {% if active_task.due_date.date() < today %}
+                <span class="badge bg-danger">Gecikmiş</span>
+            {% elif active_task.completed_at and active_task.due_date.date() >= active_task.completed_at.date() %}
+                <span class="badge bg-success">Zamanında Bitmiş</span>
+            {% elif not active_task.start_at %}
+                <span class="badge bg-secondary">Zamanı Gelmemiş</span>
+            {% else %}
+                <span class="badge bg-primary">Erken Bitmiş</span>
+            {% endif %}
+        {% else %}
+            <span class="badge bg-dark">Tarih Yok</span>
+        {% endif %}
+    </div>
+</div>
+
+            </div>
+
+            <hr>
+
+            <!-- Butonlar ve kalan süre -->
+            <div class="d-flex justify-content-between align-items-center mt-2">
+                <div class="d-flex gap-2">
+                    {% if active_task %}
+    {% if active_task.status == 'in_progress' %}
+  <a href="{{ url_for('pause_task', id=active_task.id) }}" class="btn btn-warning">Duraklat</a>
+  <a href="{{ url_for('finish_task', id=active_task.id) }}" class="btn btn-success">Bitir</a>
+{% endif %}
+{% else %}
+    <div class="text-center text-muted">Başlatılacak görev yok.</div>
+{% endif %}
+
+                </div>
+                <!-- Kalan süre -->
+                <div class="text-end fw-bold">
+                    {% if active_task.due_date and active_task.started_at %}
+                        {% set remaining_time = (active_task.due_date - active_task.started_at).days %}
+                        Kalan: {{ remaining_time }} gün
+                    {% else %}
+                        Kalan süre yok
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="card shadow-sm">
+        <div class="card-body text-center text-muted">
+            Başlatılmış görev yok.
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+  
+</div>
       </div>
     </main>
 

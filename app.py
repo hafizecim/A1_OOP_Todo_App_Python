@@ -43,8 +43,11 @@ class Task(db.Model):
 # Anasayfa
 @app.route('/')
 def index():
+    global active_task_id  # active_task_id’yi kullanacağız
     tasks = Task.query.order_by(Task.created_at.desc()).all()
-    return render_template('index.html', tasks=tasks)
+    active_task = Task.query.get(active_task_id) if active_task_id else None
+    today = datetime.utcnow().date()
+    return render_template('index.html', tasks=tasks, active_task=active_task, today=today)
 
 
 # Yeni görev sayfası
@@ -125,6 +128,44 @@ def edit(id):
         return redirect(url_for('index'))
 
     return render_template('edit.html', task=task)
+
+# Aktif görev için global değişken (basit çözüm, prod için session veya DB flag daha iyi)
+active_task_id = None
+
+# Başlat butonuna tıklandığında
+@app.route('/start_task/<int:id>')
+def start_task(id):
+    global active_task_id
+    task = Task.query.get_or_404(id)
+    task.status = 'in_progress'
+    task.start_at = datetime.utcnow()
+    db.session.commit()
+    active_task_id = id
+    return redirect(url_for('index'))
+
+# Duraklat
+@app.route('/pause_task/<int:id>')
+def pause_task(id):
+    task = Task.query.get_or_404(id)
+    if task.status == 'in_progress':
+        task.status = 'pending'
+    db.session.commit()
+    global active_task_id
+    active_task_id = None
+    return redirect(url_for('index'))
+
+# Bitir
+@app.route('/finish_task/<int:id>')
+def finish_task(id):
+    task = Task.query.get_or_404(id)
+    task.status = 'completed'
+    task.completed_at = datetime.utcnow()
+    db.session.commit()
+    global active_task_id
+    active_task_id = None
+    return redirect(url_for('index'))
+
+
 
 
 if __name__ == '__main__':
