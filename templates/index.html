@@ -47,20 +47,25 @@
     <main class="container-fluid py-3">
       <!-- TOAST MESAJLARI -->
       <div class="toast-container">
-        {% with messages = get_flashed_messages(with_categories=true) %}
-          {% if messages %}
-            {% for category, msg in messages %}
-              <div class="toast align-items-center text-bg-{{ 'success' if category=='success' else ('warning' if category=='warning' else 'danger') }} border-0" role="alert" aria-live="assertive" aria-atomic="true">
-                <div class="d-flex">
-                  <div class="toast-body">
-                    {{ msg }}
-                  </div>
-                  <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Kapat"></button>
-                </div>
-              </div>
-            {% endfor %}
-          {% endif %}
-        {% endwith %}
+        {% with messages = get_flashed_messages(with_categories=true) %} {% if
+        messages %} {% for category, msg in messages %}
+        <div
+          class="toast align-items-center text-bg-{{ 'success' if category=='success' else ('warning' if category=='warning' else 'danger') }} border-0"
+          role="alert"
+          aria-live="assertive"
+          aria-atomic="true"
+        >
+          <div class="d-flex">
+            <div class="toast-body">{{ msg }}</div>
+            <button
+              type="button"
+              class="btn-close btn-close-white me-2 m-auto"
+              data-bs-dismiss="toast"
+              aria-label="Kapat"
+            ></button>
+          </div>
+        </div>
+        {% endfor %} {% endif %} {% endwith %}
       </div>
 
       <!-- BURADAN İTİBAREN SAYFA İÇERİĞİ -->
@@ -96,19 +101,32 @@
         <div class="col-lg-3 left-panel">
           <div class="card shadow-sm mb-3">
             <div class="card-header bg-white">
-              <strong><i class="bi bi-list-task me-2"></i> Açılan Görevler</strong>
+              <strong
+                ><i class="bi bi-list-task me-2"></i> Açılan Görevler</strong
+              >
             </div>
             <div class="card-body p-2">
               <!-- FİLTRE BUTONLARI -->
               <div class="d-flex flex-wrap gap-1 mb-3">
-                <button class="btn btn-sm btn-danger flex-fill">Gecikmiş</button>
-                <button class="btn btn-sm btn-secondary flex-fill">Zamanı Gelmemiş</button>
-                <button class="btn btn-sm btn-success flex-fill">Zamanında Bitmiş</button>
-                <button class="btn btn-sm btn-primary flex-fill">Erken Bitmiş</button>
+                <button class="btn btn-sm btn-danger flex-fill">
+                  Gecikmiş
+                </button>
+                <button class="btn btn-sm btn-secondary flex-fill">
+                  Zamanı Gelmemiş
+                </button>
+                <button class="btn btn-sm btn-success flex-fill">
+                  Zamanında Bitmiş
+                </button>
+                <button class="btn btn-sm btn-primary flex-fill">
+                  Erken Bitmiş
+                </button>
               </div>
 
               <!-- GÖREV LİSTESİ TABLOSU -->
-              <div class="table-responsive" style="max-height: calc(100vh - 300px); overflow-y: auto">
+              <div
+                class="table-responsive"
+                style="max-height: calc(100vh - 300px); overflow-y: auto"
+              >
                 {% if tasks %}
                 <table class="table table-sm table-hover small mb-0">
                   <thead>
@@ -122,18 +140,37 @@
                     {% for task in tasks %}
                     <tr>
                       <td class="align-middle fw-bold">{{ task.title }}</td>
-                      <td class="align-middle text-nowrap">{{ task.created_at.strftime('%Y-%m-%d') }}</td>
+                      <td class="align-middle text-nowrap">
+                        {{ task.created_at.strftime('%Y-%m-%d') }}
+                      </td>
                       <td class="text-end text-nowrap align-middle">
                         {% if task.status == 'pending' %}
-                        <a href="{{ url_for('update_status', id=task.id, new_status='in_progress') }}" class="btn btn-sm btn-success p-1" title="Başlat">
+                        <a
+                          href="{{ url_for('update_status', id=task.id, new_status='in_progress') }}"
+                          class="btn btn-sm btn-success p-1"
+                          title="Başlat"
+                        >
                           <i class="bi bi-play-fill"></i>
                         </a>
                         {% endif %}
-                        <a href="{{ url_for('edit', id=task.id) }}" class="btn btn-sm btn-warning p-1" title="Düzenle">
+                        <a
+                          href="{{ url_for('edit', id=task.id) }}"
+                          class="btn btn-sm btn-warning p-1"
+                          title="Düzenle"
+                        >
                           <i class="bi bi-pencil-square"></i>
                         </a>
-                        <form action="{{ url_for('delete_task', id=task.id) }}" method="POST" class="d-inline">
-                          <button type="submit" class="btn btn-sm btn-danger p-1" title="Sil" onclick="return confirm('Görevi silmek istediğine emin misin?');">
+                        <form
+                          action="{{ url_for('delete_task', id=task.id) }}"
+                          method="POST"
+                          class="d-inline"
+                        >
+                          <button
+                            type="submit"
+                            class="btn btn-sm btn-danger p-1"
+                            title="Sil"
+                            onclick="return confirm('Görevi silmek istediğine emin misin?');"
+                          >
                             <i class="bi bi-trash"></i>
                           </button>
                         </form>
@@ -143,7 +180,9 @@
                   </tbody>
                 </table>
                 {% else %}
-                <p class="text-muted small mb-0 p-2 text-center">Henüz açık görev yok.</p>
+                <p class="text-muted small mb-0 p-2 text-center">
+                  Henüz açık görev yok.
+                </p>
                 {% endif %}
               </div>
             </div>
@@ -151,7 +190,50 @@
         </div>
 
         <!-- ORTA PANEL ve SAĞ PANEL BURADA -->
-        <div class="col-lg-6"></div>
+        <!-- ORTA PANEL: Durum ve Öncelik Kartları -->
+        <div class="col-lg-6">
+          <div class="row g-3">
+            <!-- Görev Durumu Kartı -->
+            <div class="col-6">
+              <div class="card shadow-sm">
+                <div class="card-header bg-white">
+                  <strong
+                    ><i class="bi bi-list-check me-2"></i> Görev Durumu</strong
+                  >
+                </div>
+                <div class="card-body">
+                  <div class="d-flex justify-content-between mb-2">
+                    <span>Bekleyen</span>
+                    <span class="badge bg-warning text-dark">
+                      {{
+                      tasks|selectattr('status','equalto','pending')|list|length
+                      }}
+                    </span>
+                  </div>
+                  <div class="d-flex justify-content-between mb-2">
+                    <span>İşlemde</span>
+                    <span class="badge bg-primary">
+                      {{
+                      tasks|selectattr('status','equalto','in_progress')|list|length
+                      }}
+                    </span>
+                  </div>
+                  <div class="d-flex justify-content-between">
+                    <span>Tamamlanmış</span>
+                    <span class="badge bg-success">
+                      {{
+                      tasks|selectattr('status','equalto','completed')|list|length
+                      }}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            
+          </div>
+        </div>
+
         <div class="col-lg-3"></div>
       </div>
     </main>
@@ -161,14 +243,14 @@
 
     <!-- Toast otomatik gösterme ve kapanma -->
     <script>
-      document.addEventListener('DOMContentLoaded', function () {
-        var toastElList = [].slice.call(document.querySelectorAll('.toast'))
+      document.addEventListener("DOMContentLoaded", function () {
+        var toastElList = [].slice.call(document.querySelectorAll(".toast"));
         var toastList = toastElList.map(function (toastEl) {
-          var t = new bootstrap.Toast(toastEl, { delay: 3000 }) // 3 saniye
-          t.show()
-          return t
-        })
-      })
+          var t = new bootstrap.Toast(toastEl, { delay: 3000 }); // 3 saniye
+          t.show();
+          return t;
+        });
+      });
     </script>
   </body>
 </html>
