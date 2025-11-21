@@ -115,43 +115,46 @@
             <div class="card-body p-2">
               <!-- FİLTRE BUTONLARI -->
               <div class="d-flex flex-wrap gap-1 mb-3">
-                <button class="btn btn-sm btn-danger flex-fill">
-                  🔴 Gecikmiş
-                </button>
-                <button class="btn btn-sm btn-secondary flex-fill">
-                  ⚪ Zamanı Gelmemiş
-                </button>
-                <button class="btn btn-sm btn-success flex-fill">
-                  🟢 Zamanında Bitmiş
-                </button>
-                <button class="btn btn-sm btn-primary flex-fill">
-                  🔵 Erken Bitmiş
-                </button>
-              </div>
+    <button class="btn btn-sm btn-danger flex-fill">
+        <i class="bi bi-circle-fill me-1"></i> Gecikmiş
+    </button>
+    <button class="btn btn-sm btn-secondary flex-fill">
+        <i class="bi bi-circle me-1"></i> Zamanı Gelmemiş
+    </button>
+    <button class="btn btn-sm btn-success flex-fill">
+        <i class="bi bi-check-circle-fill me-1"></i> Zamanında Bitmiş
+    </button>
+    <button class="btn btn-sm btn-primary flex-fill">
+        <i class="bi bi-hourglass-split me-1"></i> Erken Bitmiş
+    </button>
+</div>
+
 
               <div class="d-flex flex-wrap gap-1 mb-3">
-                <button class="btn btn-sm btn-warning flex-fill">
-                  🟨 Bekleyen
-                </button>
-                <button class="btn btn-sm btn-primary flex-fill">
-                  🟦 İşlemde
-                </button>
-                <button class="btn btn-sm btn-success flex-fill">
-                  🟩 Tamamlanmış
-                </button>
-              </div>
+    <button class="btn btn-sm btn-warning flex-fill">
+        <i class="bi bi-square-fill me-1"></i> Bekleyen
+    </button>
+    <button class="btn btn-sm btn-primary flex-fill">
+        <i class="bi bi-hourglass-split me-1"></i> İşlemde
+    </button>
+    <button class="btn btn-sm btn-success flex-fill">
+        <i class="bi bi-check-square-fill me-1"></i> Tamamlanmış
+    </button>
+</div>
+
 
               <div class="d-flex flex-wrap gap-1 mb-3">
-                <button class="btn btn-sm btn-danger flex-fill">
-                  🔴 Acil
-                </button>
-                <button class="btn btn-sm btn-primary flex-fill">
-                  🔵 Orta
-                </button>
-                <button class="btn btn-sm btn-secondary flex-fill">
-                  ⚪ Önemsiz
-                </button>
-              </div>
+    <button class="btn btn-sm btn-danger flex-fill">
+        <i class="bi bi-exclamation-circle-fill me-1"></i> Acil
+    </button>
+    <button class="btn btn-sm btn-primary flex-fill">
+        <i class="bi bi-exclamation-circle me-1"></i> Orta
+    </button>
+    <button class="btn btn-sm btn-secondary flex-fill">
+        <i class="bi bi-circle me-1"></i> Önemsiz
+    </button>
+</div>
+
 
               <!-- GÖREV LİSTESİ TABLOSU -->
               <div
@@ -355,8 +358,10 @@
                 <div class="d-flex gap-2">
                     {% if active_task %}
     {% if active_task.status == 'in_progress' %}
-  <a href="{{ url_for('pause_task', id=active_task.id) }}" class="btn btn-warning">Duraklat</a>
-  <a href="{{ url_for('finish_task', id=active_task.id) }}" class="btn btn-success">Bitir</a>
+  <a href="{{ url_for('pause_task', id=active_task.id) }}" class="btn btn-warning">
+    <i class="bi bi-pause-fill"></i> Duraklat</a>
+  <a href="{{ url_for('finish_task', id=active_task.id) }}" class="btn btn-success">
+    <i class="bi bi-check2-square"></i> Bitir</a>
 {% endif %}
 {% else %}
     <div class="text-center text-muted">Başlatılacak görev yok.</div>
