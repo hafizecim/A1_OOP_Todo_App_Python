@@ -33,14 +33,17 @@ def add():
     flash("Görev eklendi ✅", "success")
     return redirect(url_for('index'))
 
-@app.route('/complete/<id>')
+@app.route('/complete/<int:id>')
 def complete(id):
-    
-    todo = Todo.query.filter_by(id=int(id)).first() 
-    todo.complete = True
-    db.session.commit()
-   
+    todo = Todo.query.filter_by(id=id).first()
+    if todo:
+        todo.complete = True
+        db.session.commit()
+        flash("Görev tamamlandı 🎉", "success")
+    else:
+        flash("Görev bulunamadı.", "danger")
     return redirect(url_for('index'))
+
     
 if __name__ == '__main__':
     with app.app_context():  # Flask uygulama bağlamını açıyoruz
