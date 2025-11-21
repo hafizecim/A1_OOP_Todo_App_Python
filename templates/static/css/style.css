@@ -9,3 +9,7 @@ body {
   font-size: 1.15rem;
   letter-spacing: 0.2px;
 }
+
+.card {
+  border-radius: 12px;
+}
