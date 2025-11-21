@@ -1,8 +1,9 @@
-from flask import Flask, render_template, request,redirect, url_for
+from flask import Flask, render_template, request,redirect, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
 
 
 app = Flask(__name__)
+app.secret_key = "gizli-bir-anahtar"  # flash mesajları için (gerçek projede env var kullan)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///todo.db'
 
@@ -11,7 +12,7 @@ db = SQLAlchemy(app)
 class Todo(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     text = db.Column(db.String(200))
-    complete = db.Column(db.Boolean)
+    complete = db.Column(db.Boolean, default=False)
 
 @app.route('/')
 def index():
@@ -21,10 +22,16 @@ def index():
 
 @app.route('/add', methods=['POST'])
 def add():
-    todo = Todo(text=request.form['todoitem'], complete=False)
+    text = request.form.get('todoitem', '').strip()
+    if not text:
+        flash("Görev boş olamaz.", "warning")
+        return redirect(url_for('index'))
+    
+    todo = Todo(text=text, complete=False)
     db.session.add(todo)
     db.session.commit()
-    return '<h1>{}</h1>'.format(request.form['todoitem'])
+    flash("Görev eklendi ✅", "success")
+    return redirect(url_for('index'))
 
 @app.route('/complete/<id>')
 def complete(id):
