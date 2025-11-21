@@ -24,6 +24,11 @@ def add():
     db.session.add(todo)
     db.session.commit()
     return '<h1>{}</h1>'.format(request.form['todoitem'])
+
+@app.route('/complete/<id>')
+def complete(id):
+    return '<h1>{}</h1>'.format(id)
+    #return redirect(url_for('index'))
     
 if __name__ == '__main__':
     with app.app_context():  # Flask uygulama bağlamını açıyoruz

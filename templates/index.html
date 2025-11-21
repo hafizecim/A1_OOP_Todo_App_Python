@@ -8,16 +8,19 @@
     <h1>Todo List</h1>
     <div>
       Add a new todo item:
-      <form action="/add" method="POST">
+      <form action="{{url_for('add')}}" method="POST">
         <input type="text" name="todoitem" placeholder="Enter new todo item" />
-        <input type="submit" />
+        <input type="submit" value="Add Item" />
       </form>
     </div>
     <div>
+      <h2>Incomplete Items</h2>
       <ul>
         {% for todo in todos %}
         <li style="font-size: 30pt">
-          <input type="checkbox" />{{ todo.text }}
+          {{ todo.text }}<a href="{{url_for('complete', id=todo.id) }}"
+            >Mark As Complete</a
+          >
         </li>
         {% endfor %}
       </ul>

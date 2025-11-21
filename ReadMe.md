@@ -76,3 +76,4 @@ python app.py
 
 ## 6 pip install Flask-SQLAlchemy
 
+
