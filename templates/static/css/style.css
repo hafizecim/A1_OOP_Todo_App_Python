@@ -4,3 +4,8 @@ body {
   background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
   color: #111827;
 }
+
+.navbar-brand {
+  font-size: 1.15rem;
+  letter-spacing: 0.2px;
+}
