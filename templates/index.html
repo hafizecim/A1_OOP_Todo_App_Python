@@ -54,6 +54,40 @@
             </div>
           </div>
 
+          <!-- Kartlar: İncomplete ve Complete -->
+          <div class="row g-3">
+
+            <div class="col-md-6">
+              <div class="card h-100 shadow-sm">
+                <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                  <h6 class="mb-0">Tamamlanmamış</h6>
+                  <span class="badge bg-secondary">{{ incomplete|length }}</span>
+                </div>
+                <div class="card-body">
+                  {% if incomplete %}
+                  <ul class="list-group list-group-flush">
+                    {% for todo in incomplete %}
+                      <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                          <i class="bi bi-circle me-2 text-primary"></i>
+                          <span class="fw-semibold">{{ todo.text }}</span>
+                        </div>
+                        <div class="btn-group btn-group-sm" role="group">
+                          <a href="{{ url_for('complete', id=todo.id) }}" class="btn btn-success" title="Tamamlandı olarak işaretle">
+                            <i class="bi bi-check-lg"></i>
+                          </a>
+                          <!-- ileride düzenle/sil için butonlar eklenebilir -->
+                        </div>
+                      </li>
+                    {% endfor %}
+                  </ul>
+                  {% else %}
+                    <p class="text-muted small mb-0">Henüz tamamlanmamış görev yok. Yeni görev ekleyin.</p>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+
           
         </div>
       </div>
