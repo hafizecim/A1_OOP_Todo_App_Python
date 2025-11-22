@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import DateTime, Enum
 from datetime import datetime
 
+
 app = Flask(__name__)
 app.secret_key = "gizli-bir-anahtar"
 
@@ -43,37 +44,51 @@ class Task(db.Model):
 # Anasayfa
 @app.route('/')
 def index():
-    # Tüm görevleri sırala
-    tasks_query = Task.query.order_by(Task.created_at.desc())
+    tasks = Task.query.order_by(Task.created_at.desc()).all()
+    active_task = Task.query.filter_by(status='in_progress').first()
+    today = datetime.utcnow().date()
 
-    # URL parametrelerinden filtreleri al
-    time_filter = request.args.get('time_filter')  # 1. blok
-    status_filter = request.args.get('status_filter')  # 2. blok (sonra ekleyeceğiz)
-    priority_filter = request.args.get('priority_filter')  # 3. blok (sonra ekleyeceğiz)
+    # GET parametreleri
+    time_filter = request.args.get('time_filter')
+    status_filter = request.args.get('status_filter')
+    priority_filter = request.args.get('priority_filter')
 
-    # selected_filters dict'i template için
+    # Filtreleri dict içinde tut
     selected_filters = {
         'time_filter': time_filter,
         'status_filter': status_filter,
         'priority_filter': priority_filter
     }
 
-    # 1️⃣ Zaman filtreleme (ilk blok)
+    # Başlangıç: tüm görevler
+    filtered_tasks = tasks
+
+    # Zaman filtresi
     if time_filter:
-        tasks_query = tasks_query.filter(Task.execution_state == time_filter)
+        if time_filter == 'late':
+            filtered_tasks = [t for t in filtered_tasks if t.due_date and t.due_date.date() < today and t.status != 'completed']
+        elif time_filter == 'not_due':
+            filtered_tasks = [t for t in filtered_tasks if t.due_date and t.due_date.date() > today]
+        elif time_filter == 'on_time':
+            filtered_tasks = [t for t in filtered_tasks if t.due_date and t.due_date.date() == today]
+        elif time_filter == 'early':
+            filtered_tasks = [t for t in filtered_tasks if t.due_date and t.due_date.date() < today and t.status == 'completed']
 
-    # 2️⃣ Durum filtreleme (2. blok)
+    # Durum filtresi
     if status_filter:
-        tasks_query = tasks_query.filter(Task.status == status_filter)
+        filtered_tasks = [t for t in filtered_tasks if t.status == status_filter]
 
-    tasks = tasks_query.all()
+    # Öncelik filtresi
+    if priority_filter:
+        filtered_tasks = [t for t in filtered_tasks if t.priority == priority_filter]
 
-    # Aktif görev
-    active_task = Task.query.filter_by(status='in_progress').first()
-
-    today = datetime.utcnow().date()
-    return render_template('index.html', tasks=tasks, active_task=active_task, today=today, selected_filters=selected_filters)
-
+    return render_template(
+        'index.html',
+        tasks=filtered_tasks,
+        active_task=active_task,
+        today=today,
+        selected_filters=selected_filters
+    )
 
 # Yeni görev sayfası
 @app.route('/new_task', methods=['GET'])

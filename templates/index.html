@@ -117,33 +117,37 @@
 
 
               <div class="d-flex flex-wrap gap-1 mb-3">
-    <button class="btn btn-sm btn-warning flex-fill {% if selected_filters.status_filter == 'pending' %}active{% endif %}" 
-            onclick="window.location.href='/?status_filter=pending'">
-        <i class="bi bi-square-fill me-1"></i> Bekleyen
-    </button>
-    <button class="btn btn-sm btn-primary flex-fill {% if selected_filters.status_filter == 'in_progress' %}active{% endif %}" 
-            onclick="window.location.href='/?status_filter=in_progress'">
-        <i class="bi bi-hourglass-split me-1"></i> İşlemde
-    </button>
-    <button class="btn btn-sm btn-success flex-fill {% if selected_filters.status_filter == 'completed' %}active{% endif %}" 
-            onclick="window.location.href='/?status_filter=completed'">
-        <i class="bi bi-check-square-fill me-1"></i> Tamamlanmış
-    </button>
-</div>
+                  <button class="btn btn-sm btn-warning flex-fill {% if selected_filters.status_filter == 'pending' %}active{% endif %}" 
+                          onclick="window.location.href='/?status_filter=pending'">
+                      <i class="bi bi-square-fill me-1"></i> Bekleyen
+                  </button>
+                  <button class="btn btn-sm btn-primary flex-fill {% if selected_filters.status_filter == 'in_progress' %}active{% endif %}" 
+                          onclick="window.location.href='/?status_filter=in_progress'">
+                      <i class="bi bi-hourglass-split me-1"></i> İşlemde
+                  </button>
+                  <button class="btn btn-sm btn-success flex-fill {% if selected_filters.status_filter == 'completed' %}active{% endif %}" 
+                          onclick="window.location.href='/?status_filter=completed'">
+                      <i class="bi bi-check-square-fill me-1"></i> Tamamlanmış
+                  </button>
+              </div>
 
 
 
               <div class="d-flex flex-wrap gap-1 mb-3">
-                  <button class="btn btn-sm btn-danger flex-fill">
-                      <i class="bi bi-exclamation-circle-fill me-1"></i> Acil
-                  </button>
-                  <button class="btn btn-sm btn-primary flex-fill">
-                      <i class="bi bi-exclamation-circle me-1"></i> Orta
-                  </button>
-                  <button class="btn btn-sm btn-secondary flex-fill">
-                      <i class="bi bi-circle me-1"></i> Önemsiz
-                  </button>
-              </div>
+    <button class="btn btn-sm btn-danger flex-fill {% if selected_filters.priority_filter == 'high' %}active{% endif %}" 
+            onclick="window.location.href='/?priority_filter=high'">
+        <i class="bi bi-exclamation-circle-fill me-1"></i> Acil
+    </button>
+    <button class="btn btn-sm btn-primary flex-fill {% if selected_filters.priority_filter == 'medium' %}active{% endif %}" 
+            onclick="window.location.href='/?priority_filter=medium'">
+        <i class="bi bi-exclamation-circle me-1"></i> Orta
+    </button>
+    <button class="btn btn-sm btn-secondary flex-fill {% if selected_filters.priority_filter == 'low' %}active{% endif %}" 
+            onclick="window.location.href='/?priority_filter=low'">
+        <i class="bi bi-circle me-1"></i> Önemsiz
+    </button>
+</div>
+
 
 
               <!-- GÖREV LİSTESİ TABLOSU -->
