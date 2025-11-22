@@ -96,19 +96,24 @@
             <div class="card-body p-2">
               <!-- FİLTRE BUTONLARI -->
               <div class="d-flex flex-wrap gap-1 mb-3">
-                  <button class="btn btn-sm btn-danger flex-fill">
-                      <i class="bi bi-circle-fill me-1"></i> Gecikmiş
-                  </button>
-                  <button class="btn btn-sm btn-secondary flex-fill">
-                      <i class="bi bi-circle me-1"></i> Zamanı Gelmemiş
-                  </button>
-                  <button class="btn btn-sm btn-success flex-fill">
-                      <i class="bi bi-check-circle-fill me-1"></i> Zamanında Bitmiş
-                  </button>
-                  <button class="btn btn-sm btn-primary flex-fill">
-                      <i class="bi bi-hourglass-split me-1"></i> Erken Bitmiş
-                  </button>
+                <a href="{{ url_for('index', time_filter='late') }}"
+                  class="btn btn-sm btn-danger flex-fill {% if selected_filters and selected_filters.time_filter == 'late' %}active{% endif %}">
+                    <i class="bi bi-circle-fill me-1"></i> Gecikmiş
+                </a>
+                <a href="{{ url_for('index', time_filter='not_started_yet') }}"
+                  class="btn btn-sm btn-secondary flex-fill {% if selected_filters and selected_filters.time_filter == 'not_started_yet' %}active{% endif %}">
+                    <i class="bi bi-circle me-1"></i> Zamanı Gelmemiş
+                </a>
+                <a href="{{ url_for('index', time_filter='on_time') }}"
+                  class="btn btn-sm btn-success flex-fill {% if selected_filters and selected_filters.time_filter == 'on_time' %}active{% endif %}">
+                    <i class="bi bi-check-circle-fill me-1"></i> Zamanında Bitmiş
+                </a>
+                <a href="{{ url_for('index', time_filter='early') }}"
+                  class="btn btn-sm btn-primary flex-fill {% if selected_filters and selected_filters.time_filter == 'early' %}active{% endif %}">
+                    <i class="bi bi-hourglass-split me-1"></i> Erken Bitmiş
+                </a>
               </div>
+
 
 
               <div class="d-flex flex-wrap gap-1 mb-3">

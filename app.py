@@ -43,13 +43,34 @@ class Task(db.Model):
 # Anasayfa
 @app.route('/')
 def index():
-    tasks = Task.query.order_by(Task.created_at.desc()).all()
+    # Tüm görevleri sırala
+    tasks_query = Task.query.order_by(Task.created_at.desc())
 
-    # Aktif görev = status == 'in_progress'
+    # URL parametrelerinden filtreleri al
+    time_filter = request.args.get('time_filter')  # 1. blok
+    status_filter = request.args.get('status_filter')  # 2. blok (sonra ekleyeceğiz)
+    priority_filter = request.args.get('priority_filter')  # 3. blok (sonra ekleyeceğiz)
+
+    # selected_filters dict'i template için
+    selected_filters = {
+        'time_filter': time_filter,
+        'status_filter': status_filter,
+        'priority_filter': priority_filter
+    }
+
+    # 1️⃣ Zaman filtreleme (ilk blok)
+    if time_filter:
+        tasks_query = tasks_query.filter(Task.execution_state == time_filter)
+
+    # 2️⃣ ve 3️⃣ filtreler sonraki adımda eklenebilir
+
+    tasks = tasks_query.all()
+
+    # Aktif görev
     active_task = Task.query.filter_by(status='in_progress').first()
 
     today = datetime.utcnow().date()
-    return render_template('index.html', tasks=tasks, active_task=active_task, today=today)
+    return render_template('index.html', tasks=tasks, active_task=active_task, today=today, selected_filters=selected_filters)
 
 
 # Yeni görev sayfası
