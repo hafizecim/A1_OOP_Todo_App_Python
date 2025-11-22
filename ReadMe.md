@@ -1,6 +1,3 @@
----
-
-````markdown
 # Flask Projesi — Kurulum ve Çalıştırma Rehberi
 
 Aşağıdaki adımlar, Flask tabanlı bir projenin Windows PowerShell üzerinde doğru şekilde kurulmasını ve çalıştırılmasını sağlar.
@@ -11,10 +8,8 @@ Aşağıdaki adımlar, Flask tabanlı bir projenin Windows PowerShell üzerinde 
 
 ```powershell
 cd "C:\Users\Your_Project"
-````
 
----
-
+```
 ## 2️⃣ Sanal ortam oluştur
 
 ```powershell
