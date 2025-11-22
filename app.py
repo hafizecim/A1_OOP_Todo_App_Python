@@ -62,7 +62,9 @@ def index():
     if time_filter:
         tasks_query = tasks_query.filter(Task.execution_state == time_filter)
 
-    # 2️⃣ ve 3️⃣ filtreler sonraki adımda eklenebilir
+    # 2️⃣ Durum filtreleme (2. blok)
+    if status_filter:
+        tasks_query = tasks_query.filter(Task.status == status_filter)
 
     tasks = tasks_query.all()
 
