@@ -1,7 +1,11 @@
-Tabii! İşte senin kurulum adımlarını **Markdown formatında, düzenli ve okunabilir şekilde** hazırladım:
+---
 
 ````markdown
-# Flask Projesi Kurulum ve Çalıştırma Adımları
+# Flask Projesi — Kurulum ve Çalıştırma Rehberi
+
+Aşağıdaki adımlar, Flask tabanlı bir projenin Windows PowerShell üzerinde doğru şekilde kurulmasını ve çalıştırılmasını sağlar.
+
+---
 
 ## 1️⃣ PowerShell’i aç ve proje klasörüne git
 
@@ -25,25 +29,25 @@ py -3 -m venv venv
 .\venv\Scripts\Activate.ps1
 ```
 
-* Başarılı olursa prompt’ta `(venv)` görünecek.
+✔ Aktif olursa komut satırının başında `(venv)` görünür.
 
-* Eğer güvenlik nedeniyle çalışmazsa, önce şu komutu çalıştır:
+⚠ Eğer izin hatası alırsan:
 
 ```powershell
 Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 ```
 
-sonra tekrar aktive et.
+Ardından sanal ortamı tekrar aktif et.
 
 ---
 
 ## 4️⃣ Flask’ı yükle
 
 ```powershell
-pip install flask
+pip install Flask
 ```
 
-* Yükleme sonrası `pip list` çıktısı örneği:
+📌 Kurulum sonrası örnek `pip list` çıktısı:
 
 ```
 Package      Version
@@ -67,13 +71,26 @@ Werkzeug     3.1.3
 python app.py
 ```
 
-* Tarayıcıda açmak için: `http://127.0.0.1:5000`
-* Artık Flask projesi çalışıyor ve sanal ortam aktif durumda.
+🌐 Tarayıcıda görüntülemek için:
+`http://127.0.0.1:5000/`
+
+---
+
+## 6️⃣ Flask-SQLAlchemy yükle
+
+Veritabanı işlemleri için gerekli olan SQLAlchemy eklentisini yükleyin:
+
+```powershell
+pip install Flask-SQLAlchemy
+```
+
+---
+
+Bu adımları tamamladıktan sonra proje tamamen çalışmaya hazırdır.
 
 ```
 
 ---
 
-## 6 pip install Flask-SQLAlchemy
 
-
+```
