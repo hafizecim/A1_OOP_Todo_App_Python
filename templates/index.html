@@ -95,24 +95,40 @@
             </div>
             <div class="card-body p-2">
               <!-- FİLTRE BUTONLARI -->
-              <div class="d-flex flex-wrap gap-1 mb-3">
-                <a href="{{ url_for('index', time_filter='late') }}"
-                  class="btn btn-sm btn-danger flex-fill {% if selected_filters and selected_filters.time_filter == 'late' %}active{% endif %}">
+              <!-- 1️⃣ ZAMAN FİLTRESİ -->
+                <div class="d-flex flex-wrap gap-1 mb-3">
+                  <a href="{{ url_for('index',
+                                      time_filter='late',
+                                      status_filter=selected_filters.status_filter,
+                                      priority_filter=selected_filters.priority_filter) }}"
+                    class="btn btn-sm btn-danger flex-fill {% if selected_filters.time_filter == 'late' %}active{% endif %}">
                     <i class="bi bi-circle-fill me-1"></i> Gecikmiş
-                </a>
-                <a href="{{ url_for('index', time_filter='not_started_yet') }}"
-                  class="btn btn-sm btn-secondary flex-fill {% if selected_filters and selected_filters.time_filter == 'not_started_yet' %}active{% endif %}">
+                  </a>
+
+                  <a href="{{ url_for('index',
+                                      time_filter='not_started_yet',
+                                      status_filter=selected_filters.status_filter,
+                                      priority_filter=selected_filters.priority_filter) }}"
+                    class="btn btn-sm btn-secondary flex-fill {% if selected_filters.time_filter == 'not_started_yet' %}active{% endif %}">
                     <i class="bi bi-circle me-1"></i> Zamanı Gelmemiş
-                </a>
-                <a href="{{ url_for('index', time_filter='on_time') }}"
-                  class="btn btn-sm btn-success flex-fill {% if selected_filters and selected_filters.time_filter == 'on_time' %}active{% endif %}">
+                  </a>
+
+                  <a href="{{ url_for('index',
+                                      time_filter='on_time',
+                                      status_filter=selected_filters.status_filter,
+                                      priority_filter=selected_filters.priority_filter) }}"
+                    class="btn btn-sm btn-success flex-fill {% if selected_filters.time_filter == 'on_time' %}active{% endif %}">
                     <i class="bi bi-check-circle-fill me-1"></i> Zamanında Bitmiş
-                </a>
-                <a href="{{ url_for('index', time_filter='early') }}"
-                  class="btn btn-sm btn-primary flex-fill {% if selected_filters and selected_filters.time_filter == 'early' %}active{% endif %}">
+                  </a>
+
+                  <a href="{{ url_for('index',
+                                      time_filter='early',
+                                      status_filter=selected_filters.status_filter,
+                                      priority_filter=selected_filters.priority_filter) }}"
+                    class="btn btn-sm btn-primary flex-fill {% if selected_filters.time_filter == 'early' %}active{% endif %}">
                     <i class="bi bi-hourglass-split me-1"></i> Erken Bitmiş
-                </a>
-              </div>
+                  </a>
+                </div>
 
 
 
@@ -134,20 +150,16 @@
 
 
               <div class="d-flex flex-wrap gap-1 mb-3">
-    <button class="btn btn-sm btn-danger flex-fill {% if selected_filters.priority_filter == 'high' %}active{% endif %}" 
-            onclick="window.location.href='/?priority_filter=high'">
-        <i class="bi bi-exclamation-circle-fill me-1"></i> Acil
-    </button>
-    <button class="btn btn-sm btn-primary flex-fill {% if selected_filters.priority_filter == 'medium' %}active{% endif %}" 
-            onclick="window.location.href='/?priority_filter=medium'">
-        <i class="bi bi-exclamation-circle me-1"></i> Orta
-    </button>
-    <button class="btn btn-sm btn-secondary flex-fill {% if selected_filters.priority_filter == 'low' %}active{% endif %}" 
-            onclick="window.location.href='/?priority_filter=low'">
-        <i class="bi bi-circle me-1"></i> Önemsiz
-    </button>
-</div>
-
+                  <button class="btn btn-sm btn-danger flex-fill">
+                      <i class="bi bi-exclamation-circle-fill me-1"></i> Acil
+                  </button>
+                  <button class="btn btn-sm btn-primary flex-fill">
+                      <i class="bi bi-exclamation-circle me-1"></i> Orta
+                  </button>
+                  <button class="btn btn-sm btn-secondary flex-fill">
+                      <i class="bi bi-circle me-1"></i> Önemsiz
+                  </button>
+              </div>
 
 
               <!-- GÖREV LİSTESİ TABLOSU -->
