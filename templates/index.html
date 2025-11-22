@@ -161,17 +161,32 @@
 
 
 
-              <div class="d-flex flex-wrap gap-1 mb-3">
-                  <button class="btn btn-sm btn-danger flex-fill">
-                      <i class="bi bi-exclamation-circle-fill me-1"></i> Acil
-                  </button>
-                  <button class="btn btn-sm btn-primary flex-fill">
-                      <i class="bi bi-exclamation-circle me-1"></i> Orta
-                  </button>
-                  <button class="btn btn-sm btn-secondary flex-fill">
-                      <i class="bi bi-circle me-1"></i> Önemsiz
-                  </button>
-              </div>
+              <!-- 3️⃣ ÖNCELİK FİLTRESİ -->
+                <div class="d-flex flex-wrap gap-1 mb-3">
+                  <a href="{{ url_for('index',
+                                      priority_filter='high',
+                                      time_filter=selected_filters.time_filter,
+                                      status_filter=selected_filters.status_filter) }}"
+                    class="btn btn-sm btn-danger flex-fill {% if selected_filters.priority_filter == 'high' %}active{% endif %}">
+                    <i class="bi bi-exclamation-circle-fill me-1"></i> Acil
+                  </a>
+
+                  <a href="{{ url_for('index',
+                                      priority_filter='medium',
+                                      time_filter=selected_filters.time_filter,
+                                      status_filter=selected_filters.status_filter) }}"
+                    class="btn btn-sm btn-primary flex-fill {% if selected_filters.priority_filter == 'medium' %}active{% endif %}">
+                    <i class="bi bi-exclamation-circle me-1"></i> Orta
+                  </a>
+
+                  <a href="{{ url_for('index',
+                                      priority_filter='low',
+                                      time_filter=selected_filters.time_filter,
+                                      status_filter=selected_filters.status_filter) }}"
+                    class="btn btn-sm btn-secondary flex-fill {% if selected_filters.priority_filter == 'low' %}active{% endif %}">
+                    <i class="bi bi-circle me-1"></i> Önemsiz
+                  </a>
+                </div>
 
 
               <!-- GÖREV LİSTESİ TABLOSU -->
