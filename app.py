@@ -43,9 +43,11 @@ class Task(db.Model):
 # Anasayfa
 @app.route('/')
 def index():
-    global active_task_id  # active_task_id’yi kullanacağız
     tasks = Task.query.order_by(Task.created_at.desc()).all()
-    active_task = Task.query.get(active_task_id) if active_task_id else None
+
+    # Aktif görev = status == 'in_progress'
+    active_task = Task.query.filter_by(status='in_progress').first()
+
     today = datetime.utcnow().date()
     return render_template('index.html', tasks=tasks, active_task=active_task, today=today)
 
