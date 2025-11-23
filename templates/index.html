@@ -401,14 +401,12 @@
                   {% endif %}
 
                 </div>
-                <!-- Kalan süre -->
-                <div class="text-end fw-bold mb-2 px-3">
-                    {% if active_task.due_date and active_task.started_at %}
-                        {% set remaining_time = (active_task.due_date - active_task.started_at).days %}
-                        Kalan: {{ remaining_time }} gün
-                    {% else %}
-                        Kalan süre yok
-                    {% endif %}
+                <!-- Kalan Süre -->
+                <div class="mt-2 px-2">
+                    <span class="fw-bold">Kalan Süre: </span>
+                    <span class="badge bg-{{ kalan_sure_color }} p-2">
+                        {{ kalan_sure_text }}
+                    </span>
                 </div>
             </div>
         </div>

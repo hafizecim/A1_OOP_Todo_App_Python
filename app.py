@@ -81,13 +81,26 @@ def index():
     # Öncelik filtresi
     if priority_filter:
         filtered_tasks = [t for t in filtered_tasks if t.priority == priority_filter]
+        
+    # Aktif görevi bul
+    active_task = Task.query.filter_by(status='in_progress').first()
+    
+    # Kalan Süre Değişkenlerini Tanımla (Varsayılan değerler)
+    kalan_sure_text = "Başlatılmış görev yok."
+    kalan_sure_color = "secondary"
+
+    # AKTİF GÖREV VARSA KALAN SÜREYİ HESAPLA !!!
+    if active_task:
+        kalan_sure_text, kalan_sure_color = calculate_remaining_time(active_task)
 
     return render_template(
         'index.html',
         tasks=filtered_tasks,
         active_task=active_task,
         today=today,
-        selected_filters=selected_filters
+        selected_filters=selected_filters,
+        kalan_sure_text=kalan_sure_text,  # EKLE
+        kalan_sure_color=kalan_sure_color # EKLE
     )
 
 # Yeni görev sayfası
@@ -206,6 +219,28 @@ def finish_task(id):
     return redirect(url_for('index'))
 
 
+# Kalan süre hesaplama fonksiyonu
+
+
+def calculate_remaining_time(task):
+    if not task.due_date:
+        return "Tahmini Bitiş Yok", "secondary"
+    
+    now_date = datetime.utcnow().date()
+    due_date = task.due_date.date()
+    
+    delta = due_date - now_date
+    
+    if task.status == 'completed':
+        # Tamamlanmışsa (completed_at vs due_date karşılaştırılması daha doğru olurdu, şimdilik basit tutalım)
+        return "Görev Tamamlandı", "success"
+    
+    elif delta.days < 0:
+        return f"{-delta.days} gün gecikti", "danger"
+    elif delta.days == 0:
+        return "Bugün son gün!", "warning"
+    else:
+        return f"{delta.days} gün kaldı", "success"
 
 
 if __name__ == '__main__':
