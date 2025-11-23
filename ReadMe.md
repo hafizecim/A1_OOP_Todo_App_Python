@@ -1,6 +1,106 @@
-# Flask Projesi — Kurulum ve Çalıştırma Rehberi
 
-Aşağıdaki adımlar, Flask tabanlı bir projenin Windows PowerShell üzerinde doğru şekilde kurulmasını ve çalıştırılmasını sağlar.
+
+# 📌 Flask Task Manager — Görev Takip Sistemi
+
+Bu proje, Flask ve SQLite kullanılarak geliştirilmiş **tam işlevli bir Görev Yönetim Sistemi**dir.
+Kullanıcılar görev oluşturabilir, başlatabilir, durdurabilir, tamamlayabilir ve tüm aşamaları adım adım takip edebilir.
+
+Ayrıca görevlerin:
+
+* Zaman takibi ⏳
+* Açıklama ekleme 📝
+* Durum yönetimi 🔄
+* Filtreleme ve sıralama 🧭
+* Başlama/Bitiş zamanları 📅
+* Kalan süre hesaplama ⏱
+* Detay sayfası ve modal görünüm 📄
+
+gibi özellikleri bulunmaktadır.
+
+---
+
+# 🚀 Özellikler (Features)
+
+### ✔ Görev Ekleme
+
+Kullanıcılar başlık ve açıklama ile yeni görev oluşturabilir.
+
+### ✔ Görev Durum Yönetimi
+
+Görevler aşağıdaki statüler arasında otomatik veya manuel geçiş yapar:
+
+* `pending` — Beklemede
+* `in_progress` — Devam Ediyor
+* `paused` — Duraklatıldı
+* `completed` — Tamamlandı
+
+### ✔ Zaman Takibi
+
+Sistem, göreve başlandığı, durdurulduğu ve tamamlandığı zamanı kaydeder.
+
+### ✔ Kalan Süre Hesaplama
+
+Görevin bitiş tarihi ile şimdiki zaman arasındaki fark hesaplanır.
+
+### ✔ Görev Düzenleme
+
+Başlık ve açıklama güncellenebilir.
+
+### ✔ Görev Silme
+
+Görev tamamen kaldırılabilir.
+
+### ✔ Filtreleme
+
+Kullanıcılar görevleri statülerine göre listeleyebilir.
+
+### ✔ Aktif Görev Kartı
+
+Devam eden görevi ekranda kart olarak gösterir.
+
+### ✔ Responsive Bootstrap Arayüzü
+
+Mobil ve masaüstü uyumlu modern bir UI.
+
+---
+
+# 📁 Proje Yapısı
+
+```
+/project-folder
+│
+├── app.py                # Flask uygulaması
+├── todo.db               # SQLite veritabanı
+│
+├── /templates
+│   └── index.html        # Ana sayfa
+│   └── edit.html         # Ana sayfa
+│   └── new_task.html     # Ana sayfa
+│
+├── /static
+│   └── style.css         # Ek CSS (isteğe bağlı)
+│
+└── README.md             # Bu dosya
+```
+
+---
+
+# 🔧 Kullanılan Teknolojiler
+
+| Teknoloji            | Açıklama                 |
+| -------------------- | ------------------------ |
+| **Python**           | Arka uç dili             |
+| **Flask**            | Web framework            |
+| **SQLite**           | Dosya tabanlı veritabanı |
+| **Flask-SQLAlchemy** | ORM                      |
+| **Bootstrap 5**      | UI tasarımı              |
+| **Jinja2**           | Template motoru          |
+
+---
+
+# 🛠 Kurulum ve Çalıştırma Rehberi (Windows PowerShell)
+
+Bu bölüm senin verdiğin içeriğin **düzenlenmiş ve profesyonelleştirilmiş** halidir.
 
 ---
 
@@ -8,8 +108,10 @@ Aşağıdaki adımlar, Flask tabanlı bir projenin Windows PowerShell üzerinde 
 
 ```powershell
 cd "C:\Users\Your_Project"
-
 ```
+
+---
+
 ## 2️⃣ Sanal ortam oluştur
 
 ```powershell
@@ -24,7 +126,7 @@ py -3 -m venv venv
 .\venv\Scripts\Activate.ps1
 ```
 
-✔ Aktif olursa komut satırının başında `(venv)` görünür.
+✔ Aktifleştikten sonra komut satırında `(venv)` görünür.
 
 ⚠ Eğer izin hatası alırsan:
 
@@ -32,7 +134,7 @@ py -3 -m venv venv
 Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 ```
 
-Ardından sanal ortamı tekrar aktif et.
+Daha sonra sanal ortamı yeniden aktif et.
 
 ---
 
@@ -42,7 +144,7 @@ Ardından sanal ortamı tekrar aktif et.
 pip install Flask
 ```
 
-📌 Kurulum sonrası örnek `pip list` çıktısı:
+📌 Örnek `pip list` çıktısı:
 
 ```
 Package      Version
@@ -66,26 +168,69 @@ Werkzeug     3.1.3
 python app.py
 ```
 
-🌐 Tarayıcıda görüntülemek için:
-`http://127.0.0.1:5000/`
+Tarayıcıda açmak için:
+
+```
+http://127.0.0.1:5000/
+```
 
 ---
 
 ## 6️⃣ Flask-SQLAlchemy yükle
 
-Veritabanı işlemleri için gerekli olan SQLAlchemy eklentisini yükleyin:
-
 ```powershell
 pip install Flask-SQLAlchemy
 ```
 
----
-
-Bu adımları tamamladıktan sonra proje tamamen çalışmaya hazırdır.
-
-```
+Bu adımlardan sonra proje tamamen hazır 🎉
 
 ---
 
+# 🎯 Yapılabileceklere Örnek Geliştirmeler
 
-```
+Aşağıdaki ek özellikler proje üzerine kolayca eklenebilir:
+
+### 🔹 Kullanıcı Girişi (Login/Register)
+
+Görevler farklı kullanıcı hesapları ile kullanılabilir.
+
+### 🔹 Log / Aktivite Kaydı
+
+Her işlem otomatik olarak günlüğe işlenebilir.
+
+### 🔹 Görev İstatistik Paneli
+
+Grafikler ile:
+
+* Günlük görev tamamlama sayısı
+* Aktif görev süresi
+* Duraklatılmış görevler
+* En uzun / en kısa görev süresi
+
+raporlanabilir.
+
+### 🔹 Görevlerin PDF/CSV Olarak Dışa Aktarılması
+
+Yönetim raporları için ideal.
+
+### 🔹 Karanlık Tema
+
+Bootstrap tema switch ile kolayca eklenebilir.
+
+### 🔹 Görevlere Dosya Eklemek
+
+Word/PDF/Resim yükleme.
+
+---
+
+# 🧪 Örnek Ekran Görünümü
+
+(Buraya daha sonra ekran görüntüleri eklenecektir.)
+
+---
+
+# 🤝 Katkı
+
+Pull request’ler ve öneriler her zaman açıktır.
+
+---
