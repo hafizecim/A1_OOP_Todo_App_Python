@@ -360,21 +360,25 @@
                 <!-- Zaman Durumu -->
                 <div class="col-md-6 d-flex align-items-center">
                     <div class="fw-bold me-2">Zaman Durumu:</div>
-                    {% if active_task.due_date %}
-                        {% if active_task.due_date.date() < today %}
+
+                    {% if active_task.start_at and active_task.due_date %}
+                        {# karşılaştırmayı yalnızca tarih kısmına göre yapmak istersen .date() kullan #}
+                        {% set s = active_task.start_at.date() %}
+                        {% set d = active_task.due_date.date() %}
+
+                        {% if s > d %}
                             <span class="badge bg-danger">Gecikmiş</span>
-                        {% elif active_task.completed_at and active_task.due_date.date() >= active_task.completed_at.date() %}
-                            <span class="badge bg-success">Zamanında Bitmiş</span>
-                        {% elif not active_task.start_at %}
+                        {% elif s < d %}
                             <span class="badge bg-secondary">Zamanı Gelmemiş</span>
                         {% else %}
-                            <span class="badge bg-primary">Erken Bitmiş</span>
+                            <span class="badge bg-success">Zamanında Bitmek Üzere</span>
                         {% endif %}
+
                     {% else %}
                         <span class="badge bg-dark">Tarih Yok</span>
                     {% endif %}
                 </div>
-</div>
+            </div>
 
 </div>
 
