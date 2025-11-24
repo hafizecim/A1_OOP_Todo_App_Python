@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import DateTime, Enum
-from datetime import datetime
+from datetime import datetime, date, timezone
 
 
 app = Flask(__name__)
@@ -29,11 +29,13 @@ class Task(db.Model):
         default='medium', nullable=False
     )
 
+    
+    #Görev bitirme durumu: geç, zamanında, erken """
     execution_state = db.Column(
         Enum('late', 'not_started_yet', 'on_time', 'early', name='execution_states'),
         default='not_started_yet', nullable=False
     )
-
+    
     created_at = db.Column(DateTime, default=datetime.utcnow, nullable=False)
     start_at = db.Column(DateTime, nullable=True)
     due_date = db.Column(DateTime, nullable=True)  # Düzeltildi: formdaki due_date ile eşleşiyor
@@ -46,7 +48,8 @@ class Task(db.Model):
 def index():
     tasks = Task.query.order_by(Task.created_at.desc()).all()
     active_task = Task.query.filter_by(status='in_progress').first()
-    today = datetime.utcnow().date()
+    #today = datetime.utcnow().date()
+    today = datetime.now(timezone.utc).date() # GÜNCEL VE DOĞRU KULLANIM # GÜNCELLENDİ: datetime.utcnow() yerine datetime.now(datetime.UTC).date()
 
     # GET parametreleri
     time_filter = request.args.get('time_filter')
@@ -89,6 +92,26 @@ def index():
     kalan_sure_text = "Başlatılmış görev yok."
     kalan_sure_color = "secondary"
 
+
+    # YENİ EKLENEN KISIM: GÖREV ÖZETİ HESAPLAMASI
+    urgent_pending_late_count = 0
+    for t in tasks:
+        # 1. Bekleyen durumda olmalı
+        is_pending = t.status == 'pending'
+        
+        # 2. Acil öncelikte olmalı
+        is_urgent = t.priority == 'high'
+        
+        # 3. Süresi geçmiş olmalı (due_date var ve bugünden önce)
+        is_late = False
+        if t.due_date:
+            # due_date'in tarih kısmı bugünden önce olmalı
+            is_late = t.due_date.date() < today 
+            
+        if is_pending and is_urgent and is_late:
+            urgent_pending_late_count += 1
+            
+    
     # AKTİF GÖREV VARSA KALAN SÜREYİ HESAPLA !!!
     if active_task:
         kalan_sure_text, kalan_sure_color = calculate_remaining_time(active_task)
@@ -99,8 +122,9 @@ def index():
         active_task=active_task,
         today=today,
         selected_filters=selected_filters,
-        kalan_sure_text=kalan_sure_text,  # EKLE
-        kalan_sure_color=kalan_sure_color # EKLE
+        kalan_sure_text=kalan_sure_text,  # 
+        kalan_sure_color=kalan_sure_color,# 
+        urgent_pending_late_count=urgent_pending_late_count # Bilgi amaçlı
     )
 
 # Yeni görev sayfası
@@ -208,6 +232,7 @@ def pause_task(id):
     return redirect(url_for('index'))
 
 # Bitir
+
 @app.route('/finish_task/<int:id>')
 def finish_task(id):
     task = Task.query.get_or_404(id)
@@ -220,8 +245,6 @@ def finish_task(id):
 
 
 # Kalan süre hesaplama fonksiyonu
-
-
 def calculate_remaining_time(task):
     if not task.due_date:
         return "Tahmini Bitiş Yok", "secondary"
@@ -243,6 +266,68 @@ def calculate_remaining_time(task):
         return f"{delta.days} gün kaldı", "success"
 
 
+
+def determine_execution_state(completed_at, due_date):
+    """
+    Görevin bitirme durumunu (late, on_time, early) belirler.
+    Tarih karşılaştırmaları sadece gün bazında yapılır.
+    """
+    if not due_date:
+        return 'on_time' # Tahmini bitiş tarihi yoksa zamanında bitmiş kabul edelim
+
+    # Sadece tarih kısımlarını karşılaştır
+    completed_date = completed_at.date()
+    due_date = due_date.date()
+
+    if completed_date > due_date:
+        return 'late' # Geç bitmiş
+    elif completed_date < due_date:
+        return 'early' # Erken bitmiş
+    else: # completed_date == due_date
+        return 'on_time' # Tam zamanında bitmiş
+"""
+@app.route('/finish_task_form/<int:id>', methods=['GET'])
+def finish_task_form(id):
+    task = Task.query.get_or_404(id)
+    
+    # Eğer görev zaten completed durumundaysa, ana sayfaya yönlendir
+    if task.status == 'completed':
+        flash('Bu görev zaten tamamlanmış.', 'info')
+        return redirect(url_for('index'))
+        
+    return render_template('finish_task_form.html', task=task)
+
+@app.route('/finish_task/<int:id>', methods=['POST'])
+def finish_task(id):
+    task = Task.query.get_or_404(id)
+    
+    # 1. completed_at ve updated_at'i ayarla
+    completed_at = datetime.utcnow()
+    task.completed_at = completed_at
+    task.status = 'completed'
+    
+    # 2. Açıklama alanını güncelle (Kullanıcı tarafından girilen yeni açıklama)
+    new_description = request.form.get('description')
+    if new_description is not None:
+        task.description = new_description
+
+    # 3. execution_state'i belirle ve güncelle
+    if task.due_date:
+        task.execution_state = determine_execution_state(completed_at, task.due_date)
+    else:
+        # Tahmini bitiş tarihi yoksa zamanında bitmiş kabul edilebilir.
+        task.execution_state = 'on_time' 
+
+    db.session.commit()
+    flash(f"Görev başarıyla tamamlandı. Durum: {task.execution_state}", 'success')
+    
+    # Bitirme işleminden sonra aktif görevi sıfırla (eğer varsa)
+    global active_task_id
+    if active_task_id == id:
+        active_task_id = None
+        
+    return redirect(url_for('index'))
+"""
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
