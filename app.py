@@ -49,6 +49,7 @@ def index():
     tasks = Task.query.order_by(Task.created_at.desc()).all()
     active_task = Task.query.filter_by(status='in_progress').first()
     #today = datetime.utcnow().date()
+    # Bugünü UTC zaman dilimine duyarlı olarak alıyoruz
     today = datetime.now(timezone.utc).date() # GÜNCEL VE DOĞRU KULLANIM # GÜNCELLENDİ: datetime.utcnow() yerine datetime.now(datetime.UTC).date()
 
     # GET parametreleri
@@ -93,24 +94,44 @@ def index():
     kalan_sure_color = "secondary"
 
 
-    # YENİ EKLENEN KISIM: GÖREV ÖZETİ HESAPLAMASI
-    urgent_pending_late_count = 0
-    for t in tasks:
-        # 1. Bekleyen durumda olmalı
-        is_pending = t.status == 'pending'
-        
-        # 2. Acil öncelikte olmalı
-        is_urgent = t.priority == 'high'
-        
-        # 3. Süresi geçmiş olmalı (due_date var ve bugünden önce)
-        is_late = False
-        if t.due_date:
-            # due_date'in tarih kısmı bugünden önce olmalı
-            is_late = t.due_date.date() < today 
-            
-        if is_pending and is_urgent and is_late:
-            urgent_pending_late_count += 1
-            
+    # --- KRİTİK GÖREV ÖZETİ MANTIĞI (Öncelikli Sıralama) ---
+    
+    # Tüm görevler üzerinde filtreleme yapmak için kolaylık sağlıyoruz
+    pending_tasks = [t for t in tasks if t.status == 'pending']
+    
+    summary_message = {
+        'text': "Şu an için kritik bir uyarı bulunmamaktadır. 💪",
+        'color': "success"
+    }
+    
+    # 1. Gecikmiş (late) + Bekleyen (pending) + Acil (high)
+    count_1 = sum(1 for t in pending_tasks if t.priority == 'high' and t.due_date and t.due_date.date() < today)
+    if count_1 > 0:
+        summary_message['text'] = f" ACİL UYARI! {count_1} adet **Gecikmiş, Bekleyen ve Acil** öncelikli göreviniz var!"
+        summary_message['color'] = "danger"
+    else:
+        # 2. Gecikmiş (late) + Bekleyen (pending) + Orta (medium)
+        count_2 = sum(1 for t in pending_tasks if t.priority == 'medium' and t.due_date and t.due_date.date() < today)
+        if count_2 > 0:
+            summary_message['text'] = f" DİKKAT! {count_2} adet **Gecikmiş ve Bekleyen Orta** öncelikli göreviniz bulunmaktadır."
+            summary_message['color'] = "warning"
+        else:
+            # 3. Zamanı Gelmemiş (not_due) + Bekleyen (pending) + Acil (high)
+            count_3 = sum(1 for t in pending_tasks if t.priority == 'high' and t.due_date and t.due_date.date() > today)
+            if count_3 > 0:
+                summary_message['text'] = f" {count_3} adet **Yaklaşan ve Acil** göreviniz var. Planlamayı unutmayın."
+                summary_message['color'] = "info"
+            else:
+                # 4. Zamanı Gelmemiş (not_due) + Bekleyen (pending) + Orta (medium)
+                count_4 = sum(1 for t in pending_tasks if t.priority == 'medium' and t.due_date and t.due_date.date() > today)
+                if count_4 > 0:
+                    summary_message['text'] = f" {count_4} adet **Yaklaşan Orta** öncelikli göreviniz mevcut."
+                    summary_message['color'] = "secondary"
+                else:
+                    # 5. Varsayılan Durum (Kritik bir şey yok)
+                    # Gecikmiş Acil/Orta veya Yaklaşan Acil/Orta görev yok.
+                    pass # summary_message zaten varsayılan (success) değerde kalacak
+    
     
     # AKTİF GÖREV VARSA KALAN SÜREYİ HESAPLA !!!
     if active_task:
@@ -124,7 +145,7 @@ def index():
         selected_filters=selected_filters,
         kalan_sure_text=kalan_sure_text,  # 
         kalan_sure_color=kalan_sure_color,# 
-        urgent_pending_late_count=urgent_pending_late_count # Bilgi amaçlı
+        summary_message=summary_message
     )
 
 # Yeni görev sayfası

@@ -427,18 +427,9 @@
             <strong><i class="bi bi-info-circle me-2"></i> Görev Özetleri</strong>
         </div>
         <div class="card-body">
-            {% if urgent_pending_late_count > 0 %}
-                <p class="mb-0 fw-bold text-danger">
-                    <i class="bi bi-exclamation-triangle-fill me-1"></i> 
-                    Bekleyen ve Acil ve süresi geçmiş 
-                    <span class="badge bg-danger fs-6">{{ urgent_pending_late_count }}</span>
-                    adet göreviniz bulunmaktadır.
-                </p>
-            {% else %}
-                <p class="mb-0 text-success">
-                    <i class="bi bi-check-circle me-1"></i> Önemli bir gecikme uyarısı bulunmamaktadır.
-                </p>
-            {% endif %}
+            <p class="mb-0 fw-bold text-{{ summary_message.color }}">
+                {{ summary_message.text | safe }}
+            </p>
         </div>
     </div>
 </div>
