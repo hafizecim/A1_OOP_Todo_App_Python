@@ -2,6 +2,8 @@
 
 # 📌 Flask Task Manager — Görev Takip Sistemi
 
+![alt text](image.png)
+
 Bu proje, Flask ve SQLite kullanılarak geliştirilmiş **tam işlevli bir Görev Yönetim Sistemi**dir.
 Kullanıcılar görev oluşturabilir, başlatabilir, durdurabilir, tamamlayabilir ve tüm aşamaları adım adım takip edebilir.
 
